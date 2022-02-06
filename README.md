@@ -13,7 +13,7 @@ Quickly add named parameters to all callers of a Kotlin class, method or file.
 
 Using it is easy:
 
-1. Place your cursor in a class or function - or in a file with top-level classes or function
+1. Place your cursor in a `String.format` call in a Kotlin file
 
 2. Search for this action or choose "Replace String.format with Kotlin String Template" from the bottom of the Code menu
 

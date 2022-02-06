@@ -28,7 +28,6 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
         details.element?.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
             val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
             callExpr?.getChildOfType<KtValueArgumentList>()?.let { args ->
-                // TODO: handling substitution at beginning of string
                 println(args.arguments.first().node.text)
                 val splitFormatting = args.arguments.first().node.text.split(splitAt)
                 println(splitFormatting)
@@ -66,15 +65,15 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
 }
 
 private fun PsiElement.isEligible(): Boolean {
-    this.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
+    return this.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
         val firstNameRefExpr = dotQualExpr.getChildOfType<KtNameReferenceExpression>()
         if (firstNameRefExpr?.getReferencedName() != "String") { return false }
         val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
         val innerNameRefExpr = callExpr?.getChildOfType<KtNameReferenceExpression>()
         if (innerNameRefExpr?.getReferencedName() != "format") { return false }
         val arguments = callExpr.getChildOfType<KtValueArgumentList>()
-        return (arguments?.arguments?.size ?: 0) > 1
-    } ?: return false
+        (arguments?.arguments?.size ?: 0) > 1
+    } ?: false
 }
 
 data class EventDetails(
