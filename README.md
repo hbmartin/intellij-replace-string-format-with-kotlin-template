@@ -2,7 +2,7 @@
 
 ![Build](https://github.com/hbmartin/intellij-replace-string-format-with-kotlin-template/workflows/Build/badge.svg)
 ![Linting](https://github.com/hbmartin/intellij-replace-string-format-with-kotlin-template/workflows/Linting/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/intellij-replace-string-format-with-kotlin-template.svg)](https://plugins.jetbrains.com/plugin/intellij-replace-string-format-with-kotlin-template)
+[![Version](https://img.shields.io/jetbrains/plugin/v/18563-replace-string-format-with-kotlin-string-template.svg)](https://plugins.jetbrains.com/plugin/18563-replace-string-format-with-kotlin-string-template)
 [![CodeFactor](https://www.codefactor.io/repository/github/hbmartin/intellij-replace-string-format-with-kotlin-template/badge)](https://www.codefactor.io/repository/github/hbmartin/intellij-replace-string-format-with-kotlin-template)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=hbmartin_intellij-replace-string-format-with-kotlin-template&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=hbmartin_intellij-replace-string-format-with-kotlin-template)
 

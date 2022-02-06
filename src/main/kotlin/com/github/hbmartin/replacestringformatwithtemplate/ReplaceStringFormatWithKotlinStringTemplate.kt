@@ -64,6 +64,7 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
     }
 }
 
+@Suppress("ReturnCount")
 private fun PsiElement.isEligible(): Boolean {
     return this.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
         val firstNameRefExpr = dotQualExpr.getChildOfType<KtNameReferenceExpression>()
