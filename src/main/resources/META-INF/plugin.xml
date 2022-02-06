@@ -1,0 +1,29 @@
+<!-- https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>me.haroldmartin.replacestringformatwithtemplate</id>
+    <name>Replace String.format with Kotlin String Template</name>
+    <vendor email="me@haroldmartin.me" url="https://github.com/hbmartin/">Harold Martin</vendor>
+
+    <!-- https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.java</depends>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <!-- Text to display as description on Preferences/Settings | Plugin page -->
+    <description>
+        <![CDATA[
+          Replace String.format with Kotlin String Template
+        ]]>
+    </description>
+
+    <actions>
+        <action id="ReplaceStringFormatWithKotlinStringTemplate"
+                class="com.github.hbmartin.replacestringformatwithtemplate.ReplaceStringFormatWithKotlinStringTemplate"
+                text="Replace String.format with Kotlin String Template"
+                description="Replace String.format with Kotlin String Template">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="RefactoringMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
