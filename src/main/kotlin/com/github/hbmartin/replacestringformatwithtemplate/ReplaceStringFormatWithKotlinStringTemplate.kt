@@ -1,24 +1,19 @@
 package com.github.hbmartin.replacestringformatwithtemplate
 
+import com.github.hbmartin.replacestringformatwithtemplate.ReplaceEngine.replaceFormatWithTemplate
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.command.executeCommand
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.parentOfType
 import org.jetbrains.kotlin.idea.KotlinFileType
-import org.jetbrains.kotlin.idea.formatter.commitAndUnblockDocument
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
-import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.KtValueArgumentList
 import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
-
-private val splitAt = "%\\w".toRegex()
 
 class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.format with Kotlin String Template") {
 
@@ -26,35 +21,7 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
         val details = EventDetails(actionEvent = anActionEvent)
 
         details.element?.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
-            val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
-            callExpr?.getChildOfType<KtValueArgumentList>()?.let { args ->
-                println(args.arguments.first().node.text)
-                val splitFormatting = args.arguments.first().node.text.split(splitAt)
-                println(splitFormatting)
-                val templatedStringParts = splitFormatting.mapIndexed { index, el ->
-                    args.arguments.getOrNull(index + 1)?.let { arg ->
-                        "$el\${${arg.node.text}}"
-                    } ?: el
-                }
-                val templatedString = templatedStringParts.joinToString(separator = "").replace("%%", "%")
-                println(templatedString)
-                dotQualExpr.replaceWithTemplateString(templatedString)
-            }
-        }
-    }
-
-    private fun PsiElement.replaceWithTemplateString(template: String) {
-        val app = ApplicationManager.getApplication()
-
-        app.invokeLater {
-            executeCommand(project = project) {
-                app.runWriteAction {
-                    this.replace(
-                        KtPsiFactory(this.project).createExpression(template)
-                    )
-                    this.containingFile.commitAndUnblockDocument()
-                }
-            }
+            replaceFormatWithTemplate(dotQualExpr)
         }
     }
 
