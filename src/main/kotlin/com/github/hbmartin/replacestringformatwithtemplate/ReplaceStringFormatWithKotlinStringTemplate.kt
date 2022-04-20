@@ -44,7 +44,7 @@ private fun PsiElement.isEligible(): Boolean {
     } ?: false
 }
 
-data class EventDetails(
+private data class EventDetails(
     val editor: Editor?,
     val psiFile: PsiFile?
 ) {

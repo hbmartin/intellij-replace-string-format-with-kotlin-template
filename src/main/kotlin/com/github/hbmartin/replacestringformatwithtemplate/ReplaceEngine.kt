@@ -44,7 +44,11 @@ object ReplaceEngine {
                 app.runWriteAction {
                     val expression = KtPsiFactory(this.project).createExpression(template)
                     expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach { blockStringEntry ->
-                        removeCurlyBracesFromTemplateInspection.applyTo(blockStringEntry, project, this.findExistingEditor())
+                        removeCurlyBracesFromTemplateInspection.applyTo(
+                            element = blockStringEntry,
+                            project = project,
+                            editor = this.findExistingEditor()
+                        )
                         blockStringEntry.children.firstOrNull()?.let { innerElement ->
                             when (innerElement) {
                                 is KtStringTemplateExpression -> {
@@ -57,7 +61,10 @@ object ReplaceEngine {
                                     }
                                 }
                                 is KtParenthesizedExpression -> {
-                                    removeUnnecessaryParenthesesIntention.applyTo(innerElement, this.findExistingEditor())
+                                    removeUnnecessaryParenthesesIntention.applyTo(
+                                        element = innerElement,
+                                        editor = this.findExistingEditor()
+                                    )
                                 }
                             }
                         }
