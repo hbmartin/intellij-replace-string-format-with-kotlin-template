@@ -6,10 +6,13 @@ import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.idea.formatter.commitAndUnblockDocument
 import org.jetbrains.kotlin.idea.inspections.RemoveCurlyBracesFromTemplateInspection
 import org.jetbrains.kotlin.idea.inspections.findExistingEditor
+import org.jetbrains.kotlin.idea.intentions.RemoveUnnecessaryParenthesesIntention
 import org.jetbrains.kotlin.psi.KtBlockStringTemplateEntry
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
+import org.jetbrains.kotlin.psi.KtParenthesizedExpression
 import org.jetbrains.kotlin.psi.KtPsiFactory
+import org.jetbrains.kotlin.psi.KtStringTemplateExpression
 import org.jetbrains.kotlin.psi.KtValueArgumentList
 import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
@@ -17,6 +20,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
 object ReplaceEngine {
     private val splitAt = "(?<!%)%\\w".toRegex()
     private val removeCurlyBracesFromTemplateInspection = RemoveCurlyBracesFromTemplateInspection()
+    private val removeUnnecessaryParenthesesIntention = RemoveUnnecessaryParenthesesIntention()
 
     internal fun replaceFormatWithTemplate(dotQualExpr: KtDotQualifiedExpression) {
         val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
@@ -39,8 +43,24 @@ object ReplaceEngine {
             executeCommand(project = project) {
                 app.runWriteAction {
                     val expression = KtPsiFactory(this.project).createExpression(template)
-                    expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach {
-                        removeCurlyBracesFromTemplateInspection.applyTo(it, project, this.findExistingEditor())
+                    expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach { blockStringEntry ->
+                        removeCurlyBracesFromTemplateInspection.applyTo(blockStringEntry, project, this.findExistingEditor())
+                        blockStringEntry.children.firstOrNull()?.let { innerElement ->
+                            when (innerElement) {
+                                is KtStringTemplateExpression -> {
+                                    innerElement.node.text.takeIf { it.length > 2 }?.let {
+                                        val innerText = it.substring(1, it.length - 1)
+
+                                        blockStringEntry.replace(
+                                            KtPsiFactory(this.project).createExpression(innerText)
+                                        )
+                                    }
+                                }
+                                is KtParenthesizedExpression -> {
+                                    removeUnnecessaryParenthesesIntention.applyTo(innerElement, this.findExistingEditor())
+                                }
+                            }
+                        }
                     }
 
                     this.replace(expression)
