@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2022-04-25
+### Fixed
+- Fixed incorrect plugin ID
+
 ## [0.1.0] - 2022-04-19
 ### Added
 - Improved formatting for generated template
