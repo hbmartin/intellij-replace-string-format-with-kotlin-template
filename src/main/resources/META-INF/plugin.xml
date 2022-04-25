@@ -1,6 +1,6 @@
 <!-- https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.hbmartin.replacestringformatwithtemplate</id>
+    <id>me.haroldmartin.replacestringformatwithtemplate</id>
     <name>Replace String.format with Kotlin String Template</name>
     <vendor email="me@haroldmartin.me" url="https://github.com/hbmartin/">Harold Martin</vendor>
 
@@ -19,7 +19,7 @@
 
     <actions>
         <action id="ReplaceStringFormatWithKotlinStringTemplate"
-                class="com.github.hbmartin.replacestringformatwithtemplate.ReplaceStringFormatWithKotlinStringTemplate"
+                class="me.haroldmartin.replacestringformatwithtemplate.ReplaceStringFormatWithKotlinStringTemplate"
                 text="Replace String.format with Kotlin String Template"
                 description="Replace String.format with Kotlin String Template">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>

@@ -1,6 +1,6 @@
-package com.github.hbmartin.replacestringformatwithtemplate
+package me.haroldmartin.replacestringformatwithtemplate
 
-import com.github.hbmartin.replacestringformatwithtemplate.ReplaceEngine.replaceFormatWithTemplate
+import me.haroldmartin.replacestringformatwithtemplate.ReplaceEngine.replaceFormatWithTemplate
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys

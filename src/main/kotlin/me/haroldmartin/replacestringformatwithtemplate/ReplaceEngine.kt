@@ -1,4 +1,4 @@
-package com.github.hbmartin.replacestringformatwithtemplate
+package me.haroldmartin.replacestringformatwithtemplate
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.executeCommand
