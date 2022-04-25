@@ -1,6 +1,5 @@
 package me.haroldmartin.replacestringformatwithtemplate
 
-import me.haroldmartin.replacestringformatwithtemplate.ReplaceEngine.replaceFormatWithTemplate
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -21,7 +20,7 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
         val details = EventDetails(actionEvent = anActionEvent)
 
         details.element?.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
-            replaceFormatWithTemplate(dotQualExpr)
+            ReplaceEngine.replaceFormatWithTemplate(dotQualExpr)
         }
     }
 
