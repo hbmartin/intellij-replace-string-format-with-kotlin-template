@@ -25,14 +25,18 @@ object ReplaceEngine {
     internal fun replaceFormatWithTemplate(dotQualExpr: KtDotQualifiedExpression) {
         val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
         callExpr?.getChildOfType<KtValueArgumentList>()?.let { args ->
-            val splitFormatting = args.arguments.first().node.text.split(splitAt)
-            val templatedStringParts = splitFormatting.mapIndexed { index, el ->
-                args.arguments.getOrNull(index + 1)?.let { arg ->
-                    "$el\${${arg.node.text}}"
-                } ?: el
+            if (args.arguments.size == 1) {
+                dotQualExpr.replaceWithTemplateString(args.arguments.first().node.text)
+            } else {
+                val splitFormatting = args.arguments.first().node.text.split(splitAt)
+                val templatedStringParts = splitFormatting.mapIndexed { index, el ->
+                    args.arguments.getOrNull(index + 1)?.let { arg ->
+                        "$el\${${arg.node.text}}"
+                    } ?: el
+                }
+                val templatedString = templatedStringParts.joinToString(separator = "").replace("%%", "%")
+                dotQualExpr.replaceWithTemplateString(templatedString)
             }
-            val templatedString = templatedStringParts.joinToString(separator = "").replace("%%", "%")
-            dotQualExpr.replaceWithTemplateString(templatedString)
         }
     }
 

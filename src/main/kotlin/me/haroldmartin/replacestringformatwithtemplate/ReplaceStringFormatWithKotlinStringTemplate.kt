@@ -15,7 +15,6 @@ import org.jetbrains.kotlin.psi.KtValueArgumentList
 import org.jetbrains.kotlin.psi.psiUtil.getChildOfType
 
 class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.format with Kotlin String Template") {
-
     override fun actionPerformed(anActionEvent: AnActionEvent) {
         val details = EventDetails(actionEvent = anActionEvent)
 
@@ -37,9 +36,7 @@ private fun PsiElement.isEligible(): Boolean {
         if (firstNameRefExpr?.getReferencedName() != "String") { return false }
         val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
         val innerNameRefExpr = callExpr?.getChildOfType<KtNameReferenceExpression>()
-        if (innerNameRefExpr?.getReferencedName() != "format") { return false }
-        val arguments = callExpr.getChildOfType<KtValueArgumentList>()
-        (arguments?.arguments?.size ?: 0) > 1
+        innerNameRefExpr?.getReferencedName() == "format"
     } ?: false
 }
 
