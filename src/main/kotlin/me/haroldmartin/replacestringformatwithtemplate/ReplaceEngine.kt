@@ -19,7 +19,6 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
 
 object ReplaceEngine {
     private val splitAt = "(?<!%)%\\w".toRegex()
-    private val removeCurlyBracesFromTemplateInspection = RemoveCurlyBracesFromTemplateInspection()
     private val removeUnnecessaryParenthesesIntention = RemoveUnnecessaryParenthesesIntention()
 
     internal fun replaceFormatWithTemplate(dotQualExpr: KtDotQualifiedExpression) {
@@ -48,11 +47,6 @@ object ReplaceEngine {
                 app.runWriteAction {
                     val expression = KtPsiFactory(this.project).createExpression(template)
                     expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach { blockStringEntry ->
-                        removeCurlyBracesFromTemplateInspection.applyTo(
-                            element = blockStringEntry,
-                            project = project,
-                            editor = this.findExistingEditor()
-                        )
                         blockStringEntry.children.firstOrNull()?.let { innerElement ->
                             when (innerElement) {
                                 is KtStringTemplateExpression -> {
