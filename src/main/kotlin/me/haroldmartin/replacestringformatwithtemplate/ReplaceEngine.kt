@@ -4,7 +4,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.executeCommand
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.idea.formatter.commitAndUnblockDocument
-import org.jetbrains.kotlin.idea.inspections.RemoveCurlyBracesFromTemplateInspection
 import org.jetbrains.kotlin.idea.inspections.findExistingEditor
 import org.jetbrains.kotlin.idea.intentions.RemoveUnnecessaryParenthesesIntention
 import org.jetbrains.kotlin.psi.KtBlockStringTemplateEntry
