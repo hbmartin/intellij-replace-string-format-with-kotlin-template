@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.3] - 2022-12-03
+### Changed
+- Support for IntelliJ 2022.3 (223)
+### Removed
+- Strip curly brace inspection unavailable
+
 ## [0.1.2] - 2022-11-09
 ### Changed
 - Support for Android Studio Dolphin
