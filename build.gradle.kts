@@ -5,15 +5,15 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.7.21"
+    id("org.jetbrains.kotlin.jvm") version "1.9.0"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-    id("org.jetbrains.intellij") version "1.10.0"
+    id("org.jetbrains.intellij") version "1.15.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "1.3.1"
+    id("org.jetbrains.changelog") version "2.1.2"
     id("org.jetbrains.qodana") version "0.1.13"
-    id("io.gitlab.arturbosch.detekt") version "1.22.0"
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
-    id("com.github.ben-manes.versions") version "0.44.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
+    id("com.github.ben-manes.versions") version "0.47.0"
 }
 
 group = properties("pluginGroup")
@@ -26,6 +26,11 @@ repositories {
 dependencies {
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
     implementation(kotlin("reflect"))
+}
+
+// Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
+kotlin {
+    jvmToolchain(17)
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
