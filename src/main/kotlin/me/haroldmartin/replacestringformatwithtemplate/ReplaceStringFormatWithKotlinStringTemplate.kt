@@ -30,8 +30,8 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
 }
 
 @Suppress("ReturnCount")
-private fun PsiElement.isEligible(): Boolean {
-    return this.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
+private fun PsiElement.isEligible(): Boolean =
+    this.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
         val firstNameRefExpr = dotQualExpr.getChildOfType<KtNameReferenceExpression>()
         if (firstNameRefExpr?.getReferencedName() != "String") {
             false
@@ -40,15 +40,14 @@ private fun PsiElement.isEligible(): Boolean {
             val innerNameRefExpr = callExpr?.getChildOfType<KtNameReferenceExpression>()
             innerNameRefExpr?.getReferencedName() == "format"
         }
-    } ?: false
-}
+    } == true
 
 private data class EventDetails(
     val editor: Editor?,
     val psiFile: PsiFile?,
 ) {
     val element: PsiElement?
-        get() = editor?.caretModel?.offset?.let { psiFile?.findElementAt(it) }
+        get() = editor?.run { caretModel.offset.let { psiFile?.findElementAt(it) } }
 
     val isKotlinFile: Boolean
         get() = editor != null && psiFile != null && psiFile.fileType is KotlinFileType

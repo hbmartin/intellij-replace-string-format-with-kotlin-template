@@ -23,20 +23,25 @@ object ReplaceEngine {
     // https://github.com/JetBrains/intellij-community/commit/0dc3935b3fd9577c55887e80392327c4fa48e974
     private val removeUnnecessaryParenthesesIntention = RemoveUnnecessaryParenthesesIntention()
 
+    @Suppress("AvoidMutableCollections", "NestedScopeFunctions")
     internal fun replaceFormatWithTemplate(dotQualExpr: KtDotQualifiedExpression) {
         val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
         callExpr?.getChildOfType<KtValueArgumentList>()?.let { args ->
             if (args.arguments.size == 1) {
+                @Suppress("AvoidFirstOrLastOnList")
                 dotQualExpr.replaceWithTemplateString(args.arguments.first().node.text)
             } else {
-                val splitFormatting = args.arguments.first().node.text.split(splitAt)
-                val templatedStringParts = splitFormatting.mapIndexed { index, el ->
+                @Suppress("MaxChainedCallsOnSameLine")
+                val splitFormatting = args.arguments.firstOrNull()?.run { node.text.split(splitAt) }
+                val templatedStringParts = splitFormatting?.mapIndexed { index, el ->
                     args.arguments.getOrNull(index + 1)?.let { arg ->
                         "$el\${${arg.node.text}}"
                     } ?: el
                 }
-                val templatedString = templatedStringParts.joinToString(separator = "").replace("%%", "%")
-                dotQualExpr.replaceWithTemplateString(templatedString)
+                val templatedString = templatedStringParts?.run {
+                    joinToString(separator = "").replace("%%", "%")
+                }
+                templatedString?.let { dotQualExpr.replaceWithTemplateString(it) }
             }
         }
     }
@@ -50,14 +55,15 @@ object ReplaceEngine {
                     val expression = KtPsiFactory(this.project).createExpression(template)
                     expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach { blockStringEntry ->
                         blockStringEntry.children.firstOrNull()?.let { innerElement ->
+                            @Suppress("NestedScopeFunctions")
                             when (innerElement) {
                                 is KtStringTemplateExpression -> {
                                     innerElement
                                         .node
                                         .text
                                         .takeIf { it.length > 2 }
-                                        ?.let {
-                                            val innerText = it.substring(1, it.length - 1)
+                                        ?.let { nodeText ->
+                                            val innerText = nodeText.substring(1, nodeText.length - 1)
 
                                             blockStringEntry.replace(
                                                 KtPsiFactory(this.project).createExpression(innerText),

@@ -421,7 +421,7 @@ potential-bugs:
   CastToNullableType:
     active: true
   Deprecation:
-    active: true
+    active: false
   DontDowncastCollectionTypes:
     active: true
   DoubleMutabilityForCollection:
