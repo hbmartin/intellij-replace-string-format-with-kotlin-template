@@ -24,6 +24,7 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
 
     override fun update(e: AnActionEvent) {
         val details = EventDetails(actionEvent = e)
+        @Suppress("UnnecessaryParentheses")
         e.presentation.isEnabled = details.isKotlinFile && (details.element?.isEligible() == true)
     }
 }
@@ -32,25 +33,28 @@ class ReplaceStringFormatWithKotlinStringTemplate : AnAction("Replace String.for
 private fun PsiElement.isEligible(): Boolean {
     return this.parentOfType<KtDotQualifiedExpression>(withSelf = true)?.let { dotQualExpr ->
         val firstNameRefExpr = dotQualExpr.getChildOfType<KtNameReferenceExpression>()
-        if (firstNameRefExpr?.getReferencedName() != "String") { return false }
-        val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
-        val innerNameRefExpr = callExpr?.getChildOfType<KtNameReferenceExpression>()
-        innerNameRefExpr?.getReferencedName() == "format"
+        if (firstNameRefExpr?.getReferencedName() != "String") {
+            false
+        } else {
+            val callExpr = dotQualExpr.getChildOfType<KtCallExpression>()
+            val innerNameRefExpr = callExpr?.getChildOfType<KtNameReferenceExpression>()
+            innerNameRefExpr?.getReferencedName() == "format"
+        }
     } ?: false
 }
 
 private data class EventDetails(
     val editor: Editor?,
-    val psiFile: PsiFile?
+    val psiFile: PsiFile?,
 ) {
-    constructor(actionEvent: AnActionEvent) : this (
-        editor = actionEvent.getData(CommonDataKeys.EDITOR),
-        psiFile = actionEvent.getData(CommonDataKeys.PSI_FILE)
-    )
-
     val element: PsiElement?
         get() = editor?.caretModel?.offset?.let { psiFile?.findElementAt(it) }
 
     val isKotlinFile: Boolean
         get() = editor != null && psiFile != null && psiFile.fileType is KotlinFileType
+
+    constructor(actionEvent: AnActionEvent) : this (
+        editor = actionEvent.getData(CommonDataKeys.EDITOR),
+        psiFile = actionEvent.getData(CommonDataKeys.PSI_FILE),
+    )
 }

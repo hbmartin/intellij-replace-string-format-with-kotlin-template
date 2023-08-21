@@ -51,7 +51,7 @@ object ReplaceEngine {
                     expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach { blockStringEntry ->
                         blockStringEntry.children.firstOrNull()?.let { innerElement ->
                             when (innerElement) {
-                                is KtStringTemplateExpression ->
+                                is KtStringTemplateExpression -> {
                                     innerElement
                                         .node
                                         .text
@@ -63,12 +63,14 @@ object ReplaceEngine {
                                                 KtPsiFactory(this.project).createExpression(innerText),
                                             )
                                         }
-                                is KtParenthesizedExpression ->
+                                }
+                                is KtParenthesizedExpression -> {
                                     removeUnnecessaryParenthesesIntention
                                         .applyTo(
                                             element = innerElement,
                                             editor = this.findExistingEditor(),
                                         )
+                                }
                             }
                         }
                     }
