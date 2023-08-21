@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.4] - 2023-08-21
+### Changed
+- Support for IntelliJ up to 230
+- This will be the last release to support IntelliJ versions < 2023.1 (231)
+- Internal upgrades
+
 ## [0.1.3] - 2022-12-03
 ### Changed
 - Support for IntelliJ 2022.3 (223)
