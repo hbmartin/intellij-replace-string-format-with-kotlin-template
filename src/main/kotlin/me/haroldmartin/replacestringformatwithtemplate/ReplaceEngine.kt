@@ -18,6 +18,9 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
 
 object ReplaceEngine {
     private val splitAt = "(?<!%)%\\w".toRegex()
+
+    // Looks like this is getting moved in 231, revisit with subsequent IJ releases
+    // https://github.com/JetBrains/intellij-community/commit/0dc3935b3fd9577c55887e80392327c4fa48e974
     private val removeUnnecessaryParenthesesIntention = RemoveUnnecessaryParenthesesIntention()
 
     internal fun replaceFormatWithTemplate(dotQualExpr: KtDotQualifiedExpression) {
@@ -48,21 +51,24 @@ object ReplaceEngine {
                     expression.getChildrenOfType<KtBlockStringTemplateEntry>().forEach { blockStringEntry ->
                         blockStringEntry.children.firstOrNull()?.let { innerElement ->
                             when (innerElement) {
-                                is KtStringTemplateExpression -> {
-                                    innerElement.node.text.takeIf { it.length > 2 }?.let {
-                                        val innerText = it.substring(1, it.length - 1)
+                                is KtStringTemplateExpression ->
+                                    innerElement
+                                        .node
+                                        .text
+                                        .takeIf { it.length > 2 }
+                                        ?.let {
+                                            val innerText = it.substring(1, it.length - 1)
 
-                                        blockStringEntry.replace(
-                                            KtPsiFactory(this.project).createExpression(innerText)
+                                            blockStringEntry.replace(
+                                                KtPsiFactory(this.project).createExpression(innerText),
+                                            )
+                                        }
+                                is KtParenthesizedExpression ->
+                                    removeUnnecessaryParenthesesIntention
+                                        .applyTo(
+                                            element = innerElement,
+                                            editor = this.findExistingEditor(),
                                         )
-                                    }
-                                }
-                                is KtParenthesizedExpression -> {
-                                    removeUnnecessaryParenthesesIntention.applyTo(
-                                        element = innerElement,
-                                        editor = this.findExistingEditor()
-                                    )
-                                }
                             }
                         }
                     }

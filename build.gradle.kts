@@ -21,11 +21,13 @@ version = properties("pluginVersion")
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
 }
 
 dependencies {
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
     implementation(kotlin("reflect"))
+    detektPlugins("com.github.hbmartin:hbmartin-detekt-rules:0.1.0")
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
@@ -62,7 +64,6 @@ qodana {
 detekt {
     config = files("./detekt-config.yml")
     buildUponDefaultConfig = true
-    allRules = true
 
     reports {
         html.enabled = false
